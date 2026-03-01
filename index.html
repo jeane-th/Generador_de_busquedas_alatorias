@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de busquedas</title>
+    <style>
+        :root {
+            --primary: #0078d4;
+            --danger: #d83b01;
+            --bg: #f0f4f8;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            width: 450px;
+            text-align: center;
+        }
+
+        .counter-box {
+            margin: 15px 0;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f8fbff;
+            border: 3px solid var(--primary);
+        }
+
+        #number {
+            font-size: 90px;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            line-height: 1;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: white;
+        }
+
+        #btnStart {
+            background: var(--primary);
+        }
+
+        #btnStart:hover {
+            background: #005a9e;
+        }
+
+        #btnStop {
+            background: var(--danger);
+            display: none;
+        }
+
+        /* Oculto al inicio */
+        #btnStop:hover {
+            background: #a82a00;
+        }
+
+        button:disabled {
+            background: #ccc !important;
+            cursor: not-allowed;
+        }
+
+        #statusMsg {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #444;
+            min-height: 1.2em;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #barFill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: 0.5s;
+        }
+
+        .description {
+            margin-top: 50px;
+            padding: 10px;
+            width: 450px;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div class="card">
+        <h2 style="margin:0; color: #333;">Generador de busquedas</h2>
+        <p style="font-size: 12px; color: #777;">Recuerda: Configura el buscador para abrir en la misma pestaña</p>
+        <div class="counter-box">
+            <span class="label">Búsqueda Actual</span>
+            <span id="number">0</span>
+            <span class="label" id="totalLabel">de 30</span>
+        </div>
+
+        <div class="progress-bar">
+            <div id="barFill"></div>
+        </div>
+        <div id="statusMsg">Listo para comenzar</div>
+
+        <div class="controls">
+            <button id="btnStart" onclick="iniciarProceso()">INICIAR</button>
+            <button id="btnStop" onclick="detenerProceso()">PARAR</button>
+        </div>
+    </div>
+    <div class="description">
+        <h3 style="margin:0; color: #333;">Funcionamiento</h3>
+        <ul>
+            <li>
+                Hacer click en el boton INICIAR, para generar una busqueda aleatoria en bing
+            </li>
+            <li>Debe interactuar con la pagina haciendo click en las sugerencias de busquedas generadas por bing></li>
+            <li>La ventana se ira actualizado con nuevas busquedas aleatorias</li>
+            <li>Para detener la busqueda de click en el boton PARAR</li>
+        </ul>
+        <div>
+            <h4>Configuración Big</h4>
+            <ul>
+                <li>Entra a Bing.com y abre el menú de configuración.
+                </li>
+                <li>
+                    En la sección Resultados, desactiva la opción: "Abrir vínculos de los resultados de búsqueda en una pestaña nueva".
+                </li>
+                <li>Guarda los cambios.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        let abortar = false;
+        const prefijos = ["cómo hacer", "mejores", "noticias de", "historia de", "precio de", "guía sobre", "qué es", "review de", "ranking", "ofertas de"];
+        const temas = ["tecnología", "viajes", "cocina", "IA", "marte", "ejercicio", "finanzas", "cine", "autos", "música", "astronomía", "salud", "videojuegos", "moda", "naturaleza"];
+        const sufijos = ["2026", "hoy", "español", "actualizado", "paso a paso", "gratis", "online", "para principiantes"];
+
+        function generarFrase() {
+            const p = prefijos[Math.floor(Math.random() * prefijos.length)];
+            const t = temas[Math.floor(Math.random() * temas.length)];
+            const s = sufijos[Math.floor(Math.random() * sufijos.length)];
+            return `${p} ${t} ${s}`;
+        }
+
+        function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        function detenerProceso() {
+            abortar = true;
+            document.getElementById('statusMsg').innerText = "🛑 Deteniendo después de esta búsqueda...";
+        }
+
+        async function iniciarProceso() {
+            abortar = false;
+            const btnStart = document.getElementById('btnStart');
+            const btnStop = document.getElementById('btnStop');
+            const status = document.getElementById('statusMsg');
+            const contador = document.getElementById('number');
+            const bar = document.getElementById('barFill');
+
+            btnStart.disabled = true;
+            btnStop.style.display = "block";
+
+            let ventanaBing;
+            const totalBusquedas = 30;
+
+            for (let i = 0; i < totalBusquedas; i++) {
+                if (abortar) break;
+
+                // 1. Actualizar interfaz
+                const progreso = ((i + 1) / totalBusquedas) * 100;
+                bar.style.width = `${progreso}%`;
+                contador.innerText = i + 1;
+
+                // 2. Generar búsqueda
+                const query = generarFrase();
+                status.innerText = `Buscando: "${query}"`;
+
+                // 3. Ejecutar en Bing
+                if (i === 0) {
+                    ventanaBing = window.open(`https://www.bing.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                } else if (ventanaBing && !ventanaBing.closed) {
+                    ventanaBing.location.href = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+                } else {
+                    // Si cerraste la ventana por accidente, la reabre
+                    ventanaBing = window.open(`https://www.bing.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                }
+
+                // 4. Espera aleatoria de seguridad (10 a 16 segundos)
+                // Esto es vital para que Rewards no te banee
+                const espera = Math.floor(Math.random() * 6000) + 10000;
+                for (let seg = espera / 1000; seg > 0; seg--) {
+                    if (abortar) break;
+                    status.innerText = `Próxima búsqueda en ${seg.toFixed(0)}s...`;
+                    await delay(1000);
+                }
+            }
+
+            status.innerText = abortar ? "⛔ Proceso detenido por el usuario." : "✅ ¡30 búsquedas completadas!";
+            btnStart.disabled = false;
+            btnStop.style.display = "none";
+        }
+    </script>
+
+</body>
+
+</html>

@@ -4,6 +4,10 @@ Este es un script sencillo y eficaz diseñado para automatizar la exploración d
 
 Este proyecto fue desarrollado íntegramente con la asistencia de Inteligencia Artificial.
 
+### [Link](https://jeane-th.github.io/Generador_de_busquedas_alatorias/)
+
+
+
 ## ✨ Funciones principales
 - Búsqueda Continua: Realiza un ciclo de 30 búsquedas automáticas.
 - Lógica Anti-Repetición: Genera combinaciones de frases aleatorias para que cada búsqueda sea única.

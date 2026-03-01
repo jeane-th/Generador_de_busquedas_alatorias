@@ -160,7 +160,8 @@
                 <li>Entra a Bing.com y abre el menú de configuración.
                 </li>
                 <li>
-                    En la sección Resultados, desactiva la opción: "Abrir vínculos de los resultados de búsqueda en una pestaña nueva".
+                    En la sección Resultados, desactiva la opción: "Abrir vínculos de los resultados de búsqueda en una
+                    pestaña nueva".
                 </li>
                 <li>Guarda los cambios.</li>
             </ul>
@@ -224,10 +225,10 @@
 
                 // 4. Espera aleatoria de seguridad (10 a 16 segundos)
                 // Esto es vital para que Rewards no te banee
-                const espera = Math.floor(Math.random() * 6000) + 3000;
-                for (let seg = espera / 1000; seg > 0; seg--) {
+                const espera = Math.floor(Math.random() * 2000) + 3000;
+                for (let seg = Math.floor(espera / 1000); seg > 0; seg--) {
                     if (abortar) break;
-                    status.innerText = `Próxima búsqueda en ${seg.toFixed(0)}s...`;
+                    status.innerText = `Próxima búsqueda en ${seg}s...`;
                     await delay(1000);
                 }
             }

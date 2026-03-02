@@ -225,7 +225,7 @@
 
                 // 4. Espera aleatoria de seguridad (10 a 16 segundos)
                 // Esto es vital para que Rewards no te banee
-                const espera = Math.floor(Math.random() * 3000) + 5000;
+                const espera = Math.floor(Math.random() * 3000) + 8000;
                 for (let seg = Math.floor(espera / 1000); seg > 0; seg--) {
                     if (abortar) break;
                     status.innerText = `Próxima búsqueda en ${seg}s...`;
